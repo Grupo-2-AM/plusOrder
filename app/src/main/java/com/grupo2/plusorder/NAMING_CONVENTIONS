@@ -1,0 +1,20 @@
+- Todo o código têm que ser escrito em inglês(VARIAVEIS, COMENTÁRIOS e FUNÇÕES)
+
+- Variáveis
+    - nomes descritivos e pequenos
+    - camelCase
+
+- Constantes
+    - MACRO_CASE
+
+- Funções
+    - uma função têm que ter apenas um propósito (se a função for para calcular idade não apresentar
+        idade mas sim retornar a mesma)
+    - PascalCase
+
+- Classes
+    - PascalCase
+
+- Comentários
+    - começar com letra máiuscula e dár sempre espaço antes
+        ex:// Filipe é lindo
