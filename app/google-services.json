@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1046735975353",
+    "project_id": "plusorder-7823b",
+    "storage_bucket": "plusorder-7823b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046735975353:android:8da8889574b8998c6a3c68",
+        "android_client_info": {
+          "package_name": "com.grupo2.plusorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046735975353-vt82720rrnv5esmg72pvsigtsv2bq5p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWNtVLDX7mQo11mQo0L2K6FMk5Y3ROkGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046735975353-vt82720rrnv5esmg72pvsigtsv2bq5p5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
