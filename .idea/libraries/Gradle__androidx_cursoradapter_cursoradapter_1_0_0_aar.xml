@@ -1,9 +1,16 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.cursoradapter:cursoradapter:1.0.0@aar">
     <CLASSES>
+<<<<<<< HEAD
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/72f1c97ff6204af886160caebafcd1c9/transformed/cursoradapter-1.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/72f1c97ff6204af886160caebafcd1c9/transformed/cursoradapter-1.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/72f1c97ff6204af886160caebafcd1c9/transformed/cursoradapter-1.0.0/AndroidManifest.xml" />
+=======
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/72f1c97ff6204af886160caebafcd1c9/transformed/cursoradapter-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5c3db0c14287eb1c5413f83950af67ba/transformed/cursoradapter-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/5c3db0c14287eb1c5413f83950af67ba/transformed/cursoradapter-1.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/5c3db0c14287eb1c5413f83950af67ba/transformed/cursoradapter-1.0.0/jars/classes.jar!/" />
+>>>>>>> 8f053f48a571e2b217a90ab6df920ec090018458
     </CLASSES>
     <JAVADOC />
     <SOURCES>

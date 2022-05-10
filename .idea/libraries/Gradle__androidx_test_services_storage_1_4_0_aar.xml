@@ -1,9 +1,16 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.test.services:storage:1.4.0@aar">
     <CLASSES>
+<<<<<<< HEAD
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f47da313e731018e3e833134e39c413c/transformed/storage-1.4.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f47da313e731018e3e833134e39c413c/transformed/storage-1.4.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f47da313e731018e3e833134e39c413c/transformed/storage-1.4.0/AndroidManifest.xml" />
+=======
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f47da313e731018e3e833134e39c413c/transformed/storage-1.4.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/36119e8ad64f0a80628d34f7de79986b/transformed/storage-1.4.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/36119e8ad64f0a80628d34f7de79986b/transformed/storage-1.4.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/36119e8ad64f0a80628d34f7de79986b/transformed/storage-1.4.0/res" />
+>>>>>>> 8f053f48a571e2b217a90ab6df920ec090018458
     </CLASSES>
     <JAVADOC />
     <SOURCES>
