@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/plusOrder.iml" filepath="$PROJECT_DIR$/.idea/modules/plusOrder.iml" />
-=======
-      <module fileurl="file://$PROJECT_DIR$/.idea/plusOrder.iml" filepath="$PROJECT_DIR$/.idea/plusOrder.iml" />
->>>>>>> 8f053f48a571e2b217a90ab6df920ec090018458
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/plusOrder.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/plusOrder.app.iml" />
     </modules>
   </component>
