@@ -39,6 +39,11 @@ class Conta {
         this.dataNasc = dataNasc
     }
 
+    constructor(email: String?, pass: String?) {
+        this.pass = pass
+        this.email = email
+    }
+
     // Functions
     fun toJSON(): JSONObject {
         return JSONObject()

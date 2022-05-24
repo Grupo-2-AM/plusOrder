@@ -13,11 +13,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
-class BackendConta {
+object BackendConta {
 
-    companion object {
-        const val BASE_EXTENSION = "Conta"
-    }
+    const val BASE_EXTENSION = "Conta"
 
     fun getAllContas(callback : ((List<Conta>)->Unit)) {
         var contas = arrayListOf<Conta>()
@@ -113,7 +111,7 @@ class BackendConta {
         }
     }
 
-    fun deleteCavalo(id: UUID, callback : ((Boolean)->Unit)) {
+    fun deleteConta(id: UUID, callback : ((Boolean)->Unit)) {
 
         GlobalScope.launch (Dispatchers.IO) {
 
@@ -133,6 +131,35 @@ class BackendConta {
                 }
             }
         }
+    }
+
+    fun loginConta(contaLogin: Conta) : Conta? {
+
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val body: RequestBody = RequestBody.create(
+            mediaType, contaLogin.toJSON().toString())
+
+        var conta : Conta? = null
+
+        GlobalScope.launch (Dispatchers.IO) {
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                .url(BASE_API + BASE_EXTENSION)
+                .method("GET", body)
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                var result = response.body!!.string()
+                var resultJSONObject = JSONObject(result)
+                conta = Conta.fromJSON(resultJSONObject)
+
+                GlobalScope.launch (Dispatchers.Main){
+                    // callback.invoke(conta)
+                }
+            }
+        }
+
+        return conta
     }
 
 }

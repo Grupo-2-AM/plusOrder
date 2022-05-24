@@ -6,17 +6,16 @@
     android:layout_height="match_parent">
 
 
-
     <Button
         android:id="@+id/button2"
         android:layout_width="300dp"
         android:layout_height="54dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="112dp"
         android:backgroundTint="@color/orange"
         android:text="ENTRAR"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent">
 
     </Button>
@@ -83,14 +82,14 @@
 
     <Button
         android:id="@+id/Entrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="248dp"
         style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="86dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="248dp"
         android:text="Entrar"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/Registar"
-        app:layout_constraintHorizontal_bias="0.352"
+        app:layout_constraintHorizontal_bias="0.318"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
