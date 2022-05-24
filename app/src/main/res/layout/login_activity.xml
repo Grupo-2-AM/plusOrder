@@ -62,15 +62,16 @@
     <Button
         android:layout_width="79dp"
         android:layout_height="42dp"
-        android:bottomRightRadius="20dp"
+        android:layout_marginBottom="24dp"
         android:bottomLeftRadius="20dp"
-        android:topRightRadius="20dp"
-        android:topLeftRadius="20dp"
+        android:bottomRightRadius="20dp"
         android:src="@drawable/ic_baseline_arrow_forward_24"
+        android:topLeftRadius="20dp"
+        android:topRightRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        tools:layout_editor_absoluteY="580dp" />
+        app:layout_constraintStart_toStartOf="@+id/textView" />
     ... />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
