@@ -17,23 +17,23 @@ class LoginPage : AppCompatActivity() {
 
         val loginBt = findViewById<View>(R.id.buttonLogin) as Button
 
-        loginBt.setOnClickListener{
+        loginBt.setOnClickListener {
 
             // Get email and password
-            val emailText = findViewById<TextView>(R.id.editTextTextPassword).text as? String?
-            val passText = findViewById<TextView>(R.id.editTextTextPassword2).text as? String?
+            val emailText = findViewById<TextView>(R.id.editTextEmail).text as? String?
+            val passText = findViewById<TextView>(R.id.editTextPassword).text as? String?
 
             // Try to login with email and pass from textviews
             var contaLogin = Conta(emailText, passText)
-            var loggedConta : Conta? = BackendConta.loginConta(contaLogin)
+            var loggedConta: Conta? = BackendConta.loginConta(contaLogin)
 
             // Check if login successful
-            if (loggedConta == null)
-            {
+            if (loggedConta == null) {
                 Toast.makeText(applicationContext, "NAO", Toast.LENGTH_LONG);
             } else {
                 Toast.makeText(applicationContext, loggedConta.id.toString(), Toast.LENGTH_LONG);
             }
 
+        }
     }
 }

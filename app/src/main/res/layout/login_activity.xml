@@ -20,7 +20,7 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/editTextEmail"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="300dp"
         android:layout_height="54dp"
@@ -29,12 +29,12 @@
         android:elevation="30dp"
         android:ems="10"
         android:hint="Email"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword2"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/editTextPassword"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="300dp"
         android:layout_height="54dp"
