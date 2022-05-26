@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.util.*
 import java.time.Period
 
-object dateUtils {
+object DateUtils {
     // Calculate and return age of a date
     fun GetAge(date: Date) : Int{
         return Period.between(
