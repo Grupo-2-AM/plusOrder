@@ -19,13 +19,11 @@ class LoginPage : AppCompatActivity() {
 
         loginBt.setOnClickListener {
 
-            // Get email and password
-            val emailText = findViewById<TextView>(R.id.editTextEmail).text as? String?
-            val passText = findViewById<TextView>(R.id.editTextPassword).text as? String?
-
             // Try to login with email and pass from textviews
-            var contaLogin = Conta(emailText, passText)
-            var loggedConta: Conta? = BackendConta.loginConta(contaLogin)
+            var loggedConta: Conta? = BackendConta.LoginConta(Conta(
+                findViewById<TextView>(R.id.editTextEmail).text as? String?,
+                findViewById<TextView>(R.id.editTextPassword).text as? String?
+            ))
 
             // Check if login successful
             if (loggedConta == null) {
@@ -33,7 +31,6 @@ class LoginPage : AppCompatActivity() {
             } else {
                 Toast.makeText(applicationContext, loggedConta.id.toString(), Toast.LENGTH_LONG);
             }
-
         }
     }
 }
