@@ -9,7 +9,8 @@ android {
 
     defaultConfig {
         applicationId "com.grupo2.plusorder"
-        minSdk 22
+        minSdk 26 // 26 because of dateUtils.getAge
+        // minSdk 22 - old
         targetSdk 32
         versionCode 1
         versionName "1.0"
