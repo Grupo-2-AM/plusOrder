@@ -2,6 +2,7 @@ package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend.BASE_API
 import com.grupo2.plusorder.backend.models.Conta
+import com.grupo2.plusorder.utils.dateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -13,13 +14,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
-class BackendConta {
+object BackendConta {
 
-    companion object {
-        const val BASE_EXTENSION = "Conta"
-    }
+    const val BASE_EXTENSION = "Conta"
 
-    fun getAllContas(callback : ((List<Conta>)->Unit)) {
+    fun GetAllContas(callback : ((List<Conta>)->Unit)) {
         var contas = arrayListOf<Conta>()
         GlobalScope.launch (Dispatchers.IO) {
             val client = OkHttpClient()
@@ -44,7 +43,7 @@ class BackendConta {
         }
     }
 
-    fun getConta(id: UUID, callback : ((Conta)->Unit)) {
+    fun GetConta(id: UUID, callback : ((Conta)->Unit)) {
         GlobalScope.launch(Dispatchers.IO) {
             val client = OkHttpClient()
             val request = Request.Builder()
@@ -63,7 +62,7 @@ class BackendConta {
         }
     }
 
-    fun addConta(conta: Conta, callback : ((Boolean)->Unit)) {
+    fun AddConta(conta: Conta, callback : ((Boolean)->Unit)) {
 
         GlobalScope.launch (Dispatchers.IO) {
             val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -88,7 +87,7 @@ class BackendConta {
         }
     }
 
-    fun updateConta(id: UUID, conta: Conta, callback : ((Boolean)->Unit)) {
+    fun UpdateConta(id: UUID, conta: Conta, callback : ((Boolean)->Unit)) {
 
         GlobalScope.launch (Dispatchers.IO) {
             val mediaType = "application/json; charset=utf-8".toMediaType()
@@ -113,7 +112,7 @@ class BackendConta {
         }
     }
 
-    fun deleteCavalo(id: UUID, callback : ((Boolean)->Unit)) {
+    fun DeleteConta(id: UUID, callback : ((Boolean)->Unit)) {
 
         GlobalScope.launch (Dispatchers.IO) {
 
@@ -135,4 +134,38 @@ class BackendConta {
         }
     }
 
+    fun LoginConta(contaLogin: Conta) : Conta? {
+
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val body: RequestBody = RequestBody.create(
+            mediaType, contaLogin.toJSON().toString())
+
+        var conta : Conta? = null
+
+        GlobalScope.launch (Dispatchers.IO) {
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                .url(BASE_API + BASE_EXTENSION)
+                .method("GET", body)
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                var result = response.body!!.string()
+                var resultJSONObject = JSONObject(result)
+                conta = Conta.fromJSON(resultJSONObject)
+
+                GlobalScope.launch (Dispatchers.Main){
+                    // callback.invoke(conta)
+                }
+            }
+        }
+        return conta
+    }
+
+    fun GetAge(conta: Conta) : Int? {
+        // Check if conta.dataNasc filled
+        if (conta.dataNasc != null)
+            return dateUtils.GetAge(conta.dataNasc!!)
+        return null
+    }
 }
