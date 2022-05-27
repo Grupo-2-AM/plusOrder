@@ -2,7 +2,7 @@ package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend.BASE_API
 import com.grupo2.plusorder.backend.models.Conta
-import com.grupo2.plusorder.utils.dateUtils
+import com.grupo2.plusorder.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -165,7 +165,7 @@ object BackendConta {
     fun GetAge(conta: Conta) : Int? {
         // Check if conta.dataNasc filled
         if (conta.dataNasc != null)
-            return dateUtils.GetAge(conta.dataNasc!!)
+            return DateUtils.GetAge(conta.dataNasc!!)
         return null
     }
 }
