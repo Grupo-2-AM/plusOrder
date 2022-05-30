@@ -17,7 +17,7 @@ import java.util.*
 object BackendConta {
 
     const val BASE_EXTENSION = "Conta"
-    const val LOGIN_EXTENSION = "getLogin/"
+    const val LOGIN_EXTENSION = "postLogin/"
 
     fun GetAllContas(callback : ((List<Conta>)->Unit)) {
         var contas = arrayListOf<Conta>()
@@ -147,7 +147,7 @@ object BackendConta {
             val client = OkHttpClient()
             val request = Request.Builder()
                 .url(BASE_API + BASE_EXTENSION + "/" + LOGIN_EXTENSION)
-                .method("GET", body)
+                .post(body)
                 .build()
 
             client.newCall(request).execute().use { response ->

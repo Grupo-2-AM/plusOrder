@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
 import com.grupo2.plusorder.backend.models.Conta
 import com.grupo2.plusorder.backend.tables.BackendConta
 
@@ -21,8 +22,8 @@ class LoginPage : AppCompatActivity() {
 
             // Try to login with email and pass from textviews
             var loggedConta: Conta? = BackendConta.LoginConta(Conta(
-                findViewById<TextView>(R.id.editTextEmail).text as? String?,
-                findViewById<TextView>(R.id.editTextPassword).text as? String?
+                findViewById<TextInputEditText>(R.id.editTextEmail).text.toString(),
+                findViewById<TextInputEditText>(R.id.editTextPassword).text.toString()
             ))
 
             // Check if login successful
