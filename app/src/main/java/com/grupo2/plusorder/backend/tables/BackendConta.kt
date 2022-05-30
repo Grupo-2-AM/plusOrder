@@ -17,6 +17,7 @@ import java.util.*
 object BackendConta {
 
     const val BASE_EXTENSION = "Conta"
+    const val LOGIN_EXTENSION = "getLogin/"
 
     fun GetAllContas(callback : ((List<Conta>)->Unit)) {
         var contas = arrayListOf<Conta>()
@@ -145,7 +146,7 @@ object BackendConta {
         GlobalScope.launch (Dispatchers.IO) {
             val client = OkHttpClient()
             val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION)
+                .url(BASE_API + BASE_EXTENSION + "/" + LOGIN_EXTENSION)
                 .method("GET", body)
                 .build()
 
