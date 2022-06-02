@@ -21,10 +21,10 @@ class LoginPage : AppCompatActivity() {
         loginBt.setOnClickListener {
 
             // Try to login with email and pass from textviews
-            var loggedConta: Conta? = BackendConta.LoginConta(Conta(
+            var contaLogin = Conta(
                 findViewById<TextInputEditText>(R.id.editTextEmail).text.toString(),
-                findViewById<TextInputEditText>(R.id.editTextPassword).text.toString()
-            ))
+                findViewById<TextInputEditText>(R.id.editTextPassword).text.toString())
+            var loggedConta: Conta? = BackendConta.LoginConta(contaLogin)
 
             // Check if login successful
             if (loggedConta == null) {
