@@ -17,6 +17,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 object BackendConta {
 
@@ -152,9 +153,12 @@ object BackendConta {
             .post(body)
             .build();
 
+        var countDownLatch = CountDownLatch(1)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
+
+                countDownLatch.countDown()
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -165,15 +169,14 @@ object BackendConta {
                     var result = response.body!!.string()
                     var resultJSONObject = JSONObject(result)
                     conta = Conta.fromJSON(resultJSONObject)
+
+                    countDownLatch.countDown()
                 }
             }
         })
 
-        /*client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            conta = Conta.fromJSON(resultJSONObject)
-        }*/
+        // await until post request finished
+        countDownLatch.await()
 
         return conta
     }

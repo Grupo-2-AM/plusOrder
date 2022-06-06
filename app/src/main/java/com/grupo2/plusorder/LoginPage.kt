@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.grupo2.plusorder.backend.models.Conta
 import com.grupo2.plusorder.utils.backendutils.LoginUtils
+import kotlinx.coroutines.delay
 
 class LoginPage : AppCompatActivity() {
 

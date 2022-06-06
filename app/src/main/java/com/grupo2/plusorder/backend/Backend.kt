@@ -1,5 +1,5 @@
 package com.grupo2.plusorder.backend
 
 object Backend {
-    const val BASE_API = "https://172.16.31.182:7026/"
+    const val BASE_API = "https://7703-87-196-51-174.eu.ngrok.io/"
 }

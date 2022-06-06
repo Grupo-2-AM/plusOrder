@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId "com.grupo2.plusorder"
-        // minSdk 26 // 26 because of dateUtils.getAge
-        minSdk 22 //- old
+        minSdk 26 // 26 because of date related functions
+        // minSdk 22 // old
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -48,7 +48,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
     // http requests
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
 
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
 
 }

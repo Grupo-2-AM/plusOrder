@@ -1,6 +1,8 @@
 package com.grupo2.plusorder.backend.models
 
 import org.json.JSONObject
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class Conta {
@@ -8,25 +10,25 @@ class Conta {
     // Attributes
     var id: UUID? = null
     var nome_pp: String? = null
-    var eFuncionario: Byte? = null
+    var eFuncionario: Integer? = null
     var pass: String? = null
-    var ativo: Byte? = null
+    var ativo: Integer? = null
     var idCidade: UUID? = null
     var email: String? = null
     var NIF: String? = null
-    var dataNasc: Date? = null
+    var dataNasc: LocalDate? = null
 
     // Constructors
     constructor(
         id: UUID?,
         nome_pp: String?,
-        eFuncionario: Byte?,
+        eFuncionario: Integer?,
         pass: String?,
-        ativo: Byte?,
+        ativo: Integer?,
         idCidade: UUID?,
         email: String?,
         NIF: String?,
-        dataNasc: Date?
+        dataNasc: LocalDate?
     ) {
         this.id = id
         this.nome_pp = nome_pp
@@ -54,22 +56,22 @@ class Conta {
             .put("ativo", ativo)
             .put("idCidade", idCidade)
             .put("email", email)
-            .put("NIF", NIF)
+            .put("nif", NIF)
             .put("dataNasc", dataNasc);
     }
 
     companion object {
         fun fromJSON(jsonObject: JSONObject): Conta {
             return Conta(
-                jsonObject["id"] as? UUID,
+                UUID.fromString(jsonObject["id"] as? String),
                 jsonObject["nome_pp"] as? String,
-                jsonObject["eFuncionario"] as? Byte,
+                jsonObject["eFuncionario"] as? Integer,
                 jsonObject["pass"] as? String,
-                jsonObject["ativo"] as? Byte,
-                jsonObject["idCidade"] as? UUID?,
+                jsonObject["ativo"] as? Integer,
+                UUID.fromString(jsonObject["idCidade"] as? String?),
                 jsonObject["email"] as? String,
-                jsonObject["NIF"] as? String?,
-                jsonObject["dataNasc"] as? Date?
+                jsonObject["nif"] as? String?,
+                LocalDate.parse(jsonObject["dataNasc"] as? String?, DateTimeFormatter.ISO_DATE_TIME)
             )
         }
     }
