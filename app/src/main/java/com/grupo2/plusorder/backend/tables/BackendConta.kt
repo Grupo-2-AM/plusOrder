@@ -1,17 +1,21 @@
 package com.grupo2.plusorder.backend.tables
 
+import android.os.Handler
+import android.os.Looper.getMainLooper
+import android.widget.Toast
+import com.grupo2.plusorder.LoginPage
+import com.grupo2.plusorder.MainActivity
 import com.grupo2.plusorder.backend.Backend.BASE_API
 import com.grupo2.plusorder.backend.models.Conta
 import com.grupo2.plusorder.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.*
 
 object BackendConta {
@@ -136,30 +140,41 @@ object BackendConta {
     }
 
     fun LoginConta(contaLogin: Conta) : Conta? {
-
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body: RequestBody = RequestBody.create(
             mediaType, contaLogin.toJSON().toString())
 
         var conta : Conta? = null
 
-        GlobalScope.launch (Dispatchers.IO) {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION + "/" + LOGIN_EXTENSION)
-                .post(body)
-                .build()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + "/" + LOGIN_EXTENSION)
+            .post(body)
+            .build();
 
-            client.newCall(request).execute().use { response ->
-                var result = response.body!!.string()
-                var resultJSONObject = JSONObject(result)
-                conta = Conta.fromJSON(resultJSONObject)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
 
-                GlobalScope.launch (Dispatchers.Main){
-                    // callback.invoke(conta)
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    var result = response.body!!.string()
+                    var resultJSONObject = JSONObject(result)
+                    conta = Conta.fromJSON(resultJSONObject)
                 }
             }
-        }
+        })
+
+        /*client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultJSONObject = JSONObject(result)
+            conta = Conta.fromJSON(resultJSONObject)
+        }*/
+
         return conta
     }
 

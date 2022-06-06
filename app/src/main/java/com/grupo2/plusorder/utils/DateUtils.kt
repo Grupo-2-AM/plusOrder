@@ -7,9 +7,10 @@ import java.time.Period
 object DateUtils {
     // Calculate and return age of a date
     fun GetAge(date: Date) : Int{
-        return Period.between(
+        return -999
+        /*return Period.between(
             LocalDate.of(date.year, date.month, date.day),
             LocalDate.now()
-        ).years;
+        ).years;*/
     }
 }
