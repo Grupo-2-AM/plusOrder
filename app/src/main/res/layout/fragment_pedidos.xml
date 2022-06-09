@@ -1,14 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="PedidosFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="pedidos" />
+        android:layout_height="280dp"
+        android:background="@drawable/rounded_corners_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/textPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="180dp"
+        android:text="Perfil"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableLeft="@drawable/person_icon"
+        app:srcCompat="@drawable/ic_baseline_camera_alt_24"
+        app:tint="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textViewNome"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="280dp"
+        android:drawableLeft="@drawable/person_icon"
+
+        android:paddingLeft="10dp"
+        android:elevation="11dp"
+        android:drawablePadding="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewEmail"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="324dp"
+        android:drawableLeft="@drawable/email_icon"
+        android:paddingLeft="10dp"
+        android:elevation="11dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewMorada"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="368dp"
+        android:drawableLeft="@drawable/location_icon"
+        android:paddingLeft="10dp"
+        android:elevation="11dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewNacionalidade"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="412dp"
+        android:drawableLeft="@drawable/language_icon"
+        android:paddingLeft="10dp"
+        android:elevation="11dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewSexo"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="456dp"
+        android:drawableLeft="@drawable/person_icon"
+        android:paddingLeft="10dp"
+        android:elevation="11dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPerfil"
+        android:layout_width="380dp"
+        android:layout_height="360dp"
+        android:layout_marginTop="244dp"
+        android:background="@drawable/rounded_corners"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.645"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
