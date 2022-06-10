@@ -1,16 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EmentaFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="ementas" />
+        android:layout_height="675dp"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                style="@style/POButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mesa"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:layout_marginLeft="160dp"/>
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/Categoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@color/orange"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="1dp"
+            app:tabMode="auto"
+            app:tabSelectedTextColor="@color/orange"
+            app:tabTextAppearance="@style/POTabLayoutTextAppearance"
+            app:tabTextColor="@color/black" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/Ementa"
+            android:layout_width="match_parent"
+            android:layout_height="431dp" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/MaisPedidos"
+            android:layout_width="match_parent"
+            android:layout_height="139dp" />
+
+    </LinearLayout>
 
 
 
 </FrameLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
