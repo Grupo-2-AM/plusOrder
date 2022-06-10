@@ -1,18 +1,8 @@
 package com.grupo2.plusorder.backend.tables
 
-import android.os.Handler
-import android.os.Looper.getMainLooper
-import android.widget.Toast
-import com.grupo2.plusorder.LoginPage
-import com.grupo2.plusorder.MainActivity
 import com.grupo2.plusorder.backend.Backend.BASE_API
 import com.grupo2.plusorder.backend.models.Conta
-import com.grupo2.plusorder.utils.AppContext
 import com.grupo2.plusorder.utils.DateUtils
-import com.grupo2.plusorder.utils.uiutils.AlertDialogUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import org.json.JSONArray
@@ -23,120 +13,116 @@ import java.util.concurrent.CountDownLatch
 
 object BackendConta {
 
-    const val BASE_EXTENSION = "Conta/"
-    const val LOGIN_EXTENSION = "postLogin/"
+    private const val BASE_EXTENSION = "Conta/"
+    private const val LOGIN_EXTENSION = "postLogin/"
 
-    fun GetAllContas(callback : ((List<Conta>)->Unit)) {
+    fun GetAllContas() : List<Conta> {
         var contas = arrayListOf<Conta>()
-        GlobalScope.launch (Dispatchers.IO) {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION)
-                .build()
 
-            client.newCall(request).execute().use { response ->
-                var result = response.body!!.string()
-                var resultArray = JSONArray(result)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION)
+            .build()
 
-                for (index in 0 until resultArray.length()) {
-                    var contaJSON = resultArray[index] as JSONObject
-                    var conta = Conta.fromJSON(contaJSON)
-                    contas.add(conta)
-                }
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultArray = JSONArray(result)
 
-                GlobalScope.launch(Dispatchers.Main) {
-                    callback.invoke(contas)
-                }
+            for (index in 0 until resultArray.length()) {
+                var contaJSON = resultArray[index] as JSONObject
+                var conta = Conta.fromJSON(contaJSON)
+                contas.add(conta)
             }
         }
+
+        return contas
     }
 
-    fun GetConta(id: UUID, callback : ((Conta)->Unit)) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION + id)
-                .build()
+    fun GetConta(id: UUID) : Conta? {
+        var conta: Conta? = null
 
-            client.newCall(request).execute().use { response ->
-                var result = response.body!!.string()
-                var resultJSONObject = JSONObject(result)
-                var conta = Conta.fromJSON(resultJSONObject)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + id)
+            .build()
 
-                GlobalScope.launch(Dispatchers.Main) {
-                    callback.invoke(conta)
-                }
-            }
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultJSONObject = JSONObject(result)
+            conta = Conta.fromJSON(resultJSONObject)
         }
+
+        return conta
     }
 
-    fun AddConta(conta: Conta, callback : ((Boolean)->Unit)) {
-        GlobalScope.launch (Dispatchers.IO) {
-            val mediaType = "application/json; charset=utf-8".toMediaType()
-            val body: RequestBody = RequestBody.create(
-                mediaType, conta.toJSON().toString())
+    // Adds object to database and returns true if successful
+    fun AddConta(conta: Conta) : Boolean {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val body: RequestBody = RequestBody.create(
+            mediaType, conta.toJSON().toString())
 
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION)
-                .post(body)
-                .build()
+        var contaAdded = false
 
-            client.newCall(request).execute().use { response ->
-                var result = response.body!!.string()
-                var resultJSONObject = JSONObject(result)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION)
+            .post(body)
+            .build()
 
-                GlobalScope.launch (Dispatchers.Main){
-                    val status = resultJSONObject.getString("status")
-                    callback.invoke(status == "ok")
-                }
-            }
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultJSONObject = JSONObject(result)
+
+            val status = resultJSONObject.getString("status")
+            contaAdded = status == "ok"
         }
+
+        return contaAdded
     }
 
-    fun UpdateConta(id: UUID, conta: Conta, callback : ((Boolean)->Unit)) {
-        GlobalScope.launch (Dispatchers.IO) {
-            val mediaType = "application/json; charset=utf-8".toMediaType()
-            val body: RequestBody = RequestBody.create(
-                mediaType, conta.toJSON().toString())
+    fun UpdateConta(id: UUID, conta: Conta) : Boolean {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val body: RequestBody = RequestBody.create(
+            mediaType, conta.toJSON().toString())
 
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION + "/" + id)
-                .put(body)
-                .build()
+        var contaUpdated = false
 
-            client.newCall(request).execute().use { response ->
-                var result = response.body!!.string()
-                var resultJSONObject = JSONObject(result)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + "/" + id)
+            .put(body)
+            .build()
 
-                GlobalScope.launch (Dispatchers.Main){
-                    val status = resultJSONObject.getString("status")
-                    callback.invoke(status == "ok")
-                }
-            }
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultJSONObject = JSONObject(result)
+
+            val status = resultJSONObject.getString("status")
+            contaUpdated = status == "ok"
         }
+
+        return contaUpdated
     }
 
-    fun deleteConta(id: UUID, callback : ((Boolean)->Unit)) {
-        GlobalScope.launch (Dispatchers.IO) {
+    fun DeleteConta(id: UUID) : Boolean {
+        var contaDeleted = false
 
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION + "/" + id)
-                .delete()
-                .build()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + id)
+            .delete()
+            .build()
 
-            client.newCall(request).execute().use { response ->
-                var result = response.body!!.string()
-                var resultJSONObject = JSONObject(result)
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultJSONObject = JSONObject(result)
 
-                GlobalScope.launch (Dispatchers.Main){
-                    val status = resultJSONObject.getString("status")
-                    callback.invoke(status == "ok")
-                }
-            }
+            val status = resultJSONObject.getString("status")
+            contaDeleted = status == "ok"
+
         }
+
+        return contaDeleted
     }
 
     fun LoginConta(contaLogin: Conta) : Conta? {
