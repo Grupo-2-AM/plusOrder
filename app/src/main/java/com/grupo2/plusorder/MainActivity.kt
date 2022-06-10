@@ -14,12 +14,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val loginBt = findViewById<View>(R.id.loginBt) as Button
+        /*val loginBt = findViewById<View>(R.id.loginBt) as Button
 
         loginBt.setOnClickListener{
             val intent = Intent(this, LoginPage::class.java)
             startActivity(intent)
-        }
+        }*/
+
+        val intent = Intent(this, LoginPage::class.java)
+        startActivity(intent)
 
         val ementaFragment = EmentaFragment()
         val qrcodeFragment = QrcodeFragment()

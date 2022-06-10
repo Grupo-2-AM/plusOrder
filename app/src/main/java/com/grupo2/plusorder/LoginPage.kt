@@ -7,7 +7,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.grupo2.plusorder.backend.models.Conta
+import com.grupo2.plusorder.utils.AppContext
 import com.grupo2.plusorder.utils.backendutils.LoginUtils
+import com.grupo2.plusorder.utils.uiutils.AlertDialogUtils
 import kotlinx.coroutines.delay
 
 class LoginPage : AppCompatActivity() {
@@ -23,9 +25,9 @@ class LoginPage : AppCompatActivity() {
                 findViewById<TextInputEditText>(R.id.editTextPassword).text.toString())
 
             if (loggedConta == null) {
-                Toast.makeText(applicationContext, "NAO", Toast.LENGTH_LONG).show();
+                AlertDialogUtils.ShowOkAlertBox("Credenciais incorretas", "Tenete novamente.", this)
             } else {
-                Toast.makeText(applicationContext, loggedConta.id.toString(), Toast.LENGTH_LONG).show();
+                AlertDialogUtils.ShowOkAlertBox("Bem Vindo", loggedConta.nome_pp.toString(), this)
             }
         }
     }

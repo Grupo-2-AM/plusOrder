@@ -7,7 +7,9 @@ import com.grupo2.plusorder.LoginPage
 import com.grupo2.plusorder.MainActivity
 import com.grupo2.plusorder.backend.Backend.BASE_API
 import com.grupo2.plusorder.backend.models.Conta
+import com.grupo2.plusorder.utils.AppContext
 import com.grupo2.plusorder.utils.DateUtils
+import com.grupo2.plusorder.utils.uiutils.AlertDialogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,7 +23,7 @@ import java.util.concurrent.CountDownLatch
 
 object BackendConta {
 
-    const val BASE_EXTENSION = "Conta"
+    const val BASE_EXTENSION = "Conta/"
     const val LOGIN_EXTENSION = "postLogin/"
 
     fun GetAllContas(callback : ((List<Conta>)->Unit)) {
@@ -53,7 +55,7 @@ object BackendConta {
         GlobalScope.launch(Dispatchers.IO) {
             val client = OkHttpClient()
             val request = Request.Builder()
-                .url(BASE_API + BASE_EXTENSION + "/" + id)
+                .url(BASE_API + BASE_EXTENSION + id)
                 .build()
 
             client.newCall(request).execute().use { response ->
@@ -69,7 +71,6 @@ object BackendConta {
     }
 
     fun AddConta(conta: Conta, callback : ((Boolean)->Unit)) {
-
         GlobalScope.launch (Dispatchers.IO) {
             val mediaType = "application/json; charset=utf-8".toMediaType()
             val body: RequestBody = RequestBody.create(
@@ -94,7 +95,6 @@ object BackendConta {
     }
 
     fun UpdateConta(id: UUID, conta: Conta, callback : ((Boolean)->Unit)) {
-
         GlobalScope.launch (Dispatchers.IO) {
             val mediaType = "application/json; charset=utf-8".toMediaType()
             val body: RequestBody = RequestBody.create(
@@ -119,7 +119,6 @@ object BackendConta {
     }
 
     fun deleteConta(id: UUID, callback : ((Boolean)->Unit)) {
-
         GlobalScope.launch (Dispatchers.IO) {
 
             val client = OkHttpClient()
@@ -149,15 +148,15 @@ object BackendConta {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + "/" + LOGIN_EXTENSION)
+            .url(BASE_API + BASE_EXTENSION + LOGIN_EXTENSION)
             .post(body)
             .build();
 
         var countDownLatch = CountDownLatch(1)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                //AlertDialogUtils.ShowOkAlertBox("Não conseguimos conectar à Base de Dados", "Tente novamente.", AppContext.appContext)
                 e.printStackTrace()
-
                 countDownLatch.countDown()
             }
 
@@ -167,14 +166,16 @@ object BackendConta {
                         throw IOException("Unexpected code $response")
 
                     var result = response.body!!.string()
-                    var resultJSONObject = JSONObject(result)
-                    conta = Conta.fromJSON(resultJSONObject)
+                    // Check if result has values
+                    if (result != ""){
+                        var resultJSONObject = JSONObject(result)
+                        conta = Conta.fromJSON(resultJSONObject)
+                    }
 
                     countDownLatch.countDown()
                 }
             }
         })
-
         // await until post request finished
         countDownLatch.await()
 
