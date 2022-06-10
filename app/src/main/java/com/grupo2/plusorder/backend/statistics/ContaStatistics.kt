@@ -11,11 +11,11 @@ object ContaStatistics {
         val contas = arrayListOf<Int>()
 
         // Get Contas
-        BackendConta.GetAllContas { result ->
+        /*BackendConta.GetAllContas { result ->
             for (conta in result) {
                 contas.add(BackendConta.GetAge(conta)!!)
             }
-        };
+        };*/
 
         return MathUtils.GetAverageIntList(contas)
     }
