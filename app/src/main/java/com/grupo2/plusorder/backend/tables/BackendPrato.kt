@@ -36,6 +36,17 @@ object BackendPrato {
         return pratos
     }
 
+    // Get active pratos from a list of pratos
+    fun GetPratosAtivos(pratosSearch: List<Prato>) : List<Prato> {
+        var activePratos = arrayListOf<Prato>()
+
+        for (prato in pratosSearch)
+            if (prato.ativo!!.toInt() == 1) // toInt necessary because prato.ativo is Integer
+                activePratos.add(prato)
+
+        return activePratos
+    }
+
     fun GetAllPratosByCategoria(idCategoriaSearch: UUID) : List<Prato>{
         var pratos = arrayListOf<Prato>()
 

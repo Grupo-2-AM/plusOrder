@@ -89,7 +89,7 @@ object BackendConta {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + "/" + id)
+            .url(BASE_API + BASE_EXTENSION + id)
             .put(body)
             .build()
 
@@ -119,7 +119,6 @@ object BackendConta {
 
             val status = resultJSONObject.getString("status")
             contaDeleted = status == "ok"
-
         }
 
         return contaDeleted
