@@ -7,8 +7,6 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import com.example.myapplication.EmentaFragment
-import com.grupo2.plusorder.R
 
 
 import kotlinx.coroutines.*
@@ -21,12 +19,10 @@ class Splash : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.splash)
+        setContentView(R.layout.sploshj)
 
-        val intent = Intent(this,  MainActivity::class.java)
+        val intent = Intent(this,  Ementa::class.java)
 
-
-        val ementaFragment = EmentaFragment()
         val rotation = AnimationUtils.loadAnimation(this, R.anim.rotation)
         val logo : ImageView = findViewById(R.id.imageViewLogo_Splash)
         logo.startAnimation(rotation)

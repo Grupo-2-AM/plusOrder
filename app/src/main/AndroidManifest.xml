@@ -12,11 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlusOrder">
         <activity
-            android:name=".LoginPage"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
+        <activity
+            android:name=".Ementa"
+            android:exported="false"
+            />
         <activity
             android:name=".Splash"
             android:exported="true">
