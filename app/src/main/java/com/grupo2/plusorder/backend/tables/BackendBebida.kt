@@ -1,19 +1,20 @@
 package com.grupo2.plusorder.backend.tables
 
-import com.grupo2.plusorder.backend.Backend
 import com.grupo2.plusorder.backend.Backend.BASE_API
-import com.grupo2.plusorder.backend.models.Categoria
-import okhttp3.*
+import com.grupo2.plusorder.backend.models.Bebida
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
-object BackendCategoria {
-    private const val BASE_EXTENSION = "Categoria/"
+object BackendBebida {
+    private const val BASE_EXTENSION = "Bebida/"
 
-    fun GetAllCategorias() : List<Categoria> {
-        var categorias = arrayListOf<Categoria>()
+    fun GetAllBebidas() : List<Bebida> {
+        var bebidas = arrayListOf<Bebida>()
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -25,39 +26,39 @@ object BackendCategoria {
             var resultArray = JSONArray(result)
 
             for (index in 0 until resultArray.length()) {
-                var categoriaJSON = resultArray[index] as JSONObject
-                var categoria = Categoria.fromJSON(categoriaJSON)
-                categorias.add(categoria)
+                var bebidasJSON = resultArray[index] as JSONObject
+                var bebida = Bebida.fromJSON(bebidasJSON)
+                bebidas.add(bebida)
             }
         }
 
-        return categorias
+        return bebidas
     }
 
-    fun GetCategoria(id: UUID) : Categoria? {
-        var categoria: Categoria? = null
+    fun GetBebida(id: UUID) : Bebida? {
+        var bebida: Bebida? = null
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Backend.BASE_API + BASE_EXTENSION + id)
+            .url(BASE_API + BASE_EXTENSION + id)
             .build()
 
         client.newCall(request).execute().use { response ->
             var result = response.body!!.string()
             var resultJSONObject = JSONObject(result)
-            categoria = Categoria.fromJSON(resultJSONObject)
+            bebida = Bebida.fromJSON(resultJSONObject)
         }
 
-        return categoria
+        return bebida
     }
 
     // Adds object to database and returns true if successful
-    fun AddCategoria(categoria: Categoria) : Boolean {
+    fun AddBebida(bebida: Bebida) : Boolean {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body: RequestBody = RequestBody.create(
-            mediaType, categoria.toJSON().toString())
+            mediaType, bebida.toJSON().toString())
 
-        var categoriaAdded = false
+        var bebidaAdded = false
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -70,18 +71,18 @@ object BackendCategoria {
             var resultJSONObject = JSONObject(result)
 
             val status = resultJSONObject.getString("status")
-            categoriaAdded = status == "ok"
+            bebidaAdded = status == "ok"
         }
 
-        return categoriaAdded
+        return bebidaAdded
     }
 
-    fun UpdateCategoria(id: UUID, categoria: Categoria) : Boolean {
+    fun UpdateBebida(id: UUID, bebida: Bebida) : Boolean {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body: RequestBody = RequestBody.create(
-            mediaType, categoria.toJSON().toString())
+            mediaType, bebida.toJSON().toString())
 
-        var categoriaUpdated = false
+        var bebidaUpdated = false
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -94,18 +95,18 @@ object BackendCategoria {
             var resultJSONObject = JSONObject(result)
 
             val status = resultJSONObject.getString("status")
-            categoriaUpdated = status == "ok"
+            bebidaUpdated = status == "ok"
         }
 
-        return categoriaUpdated
+        return bebidaUpdated
     }
 
-    fun DeleteCategoria(id: UUID) : Boolean {
-        var categoriaDeleted = false
+    fun DeleteBebida(id: UUID) : Boolean {
+        var bebidaDeleted = false
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Backend.BASE_API + BASE_EXTENSION + id)
+            .url(BASE_API + BASE_EXTENSION + id)
             .delete()
             .build()
 
@@ -114,9 +115,9 @@ object BackendCategoria {
             var resultJSONObject = JSONObject(result)
 
             val status = resultJSONObject.getString("status")
-            categoriaDeleted = status == "ok"
+            bebidaDeleted = status == "ok"
         }
 
-        return categoriaDeleted
+        return bebidaDeleted
     }
 }

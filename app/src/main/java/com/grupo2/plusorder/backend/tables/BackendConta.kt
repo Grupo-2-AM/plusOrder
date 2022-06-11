@@ -12,7 +12,6 @@ import java.util.*
 import java.util.concurrent.CountDownLatch
 
 object BackendConta {
-
     private const val BASE_EXTENSION = "Conta/"
     private const val LOGIN_EXTENSION = "postLogin/"
 

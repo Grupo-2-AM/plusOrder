@@ -9,7 +9,6 @@ import org.json.JSONObject
 import java.util.*
 
 object BackendPrato {
-
     private const val BASE_EXTENSION = "Prato/"
     private const val CATEGORIA_SEARCH_EXTENSION = "pratoByCategoria/"
     private const val NAME_CATEGORIA_SEARCH_EXTENSION = "searchPratoWithCategoria/"
