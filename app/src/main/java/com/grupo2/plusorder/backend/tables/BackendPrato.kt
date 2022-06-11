@@ -11,8 +11,10 @@ import java.util.*
 object BackendPrato {
 
     private const val BASE_EXTENSION = "Prato/"
+    private const val CATEGORIA_SEARCH_EXTENSION = "pratoByCategoria/"
+    private const val NAME_CATEGORIA_SEARCH_EXTENSION = "searchPratoWithCategoria/"
 
-    fun getAllPratos() : List<Prato> {
+    fun GetAllPratos() : List<Prato> {
         var pratos = arrayListOf<Prato>()
 
         val client = OkHttpClient()
@@ -27,6 +29,52 @@ object BackendPrato {
             for (index in 0 until resultArray.length()) {
                 var pratoJSON = resultArray[index] as JSONObject
                 var prato = Prato.fromJSON(pratoJSON)
+                pratos.add(prato)
+            }
+        }
+
+        return pratos
+    }
+
+    fun GetAllPratosByCategoria(idCategoriaSearch: UUID) : List<Prato>{
+        var pratos = arrayListOf<Prato>()
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + CATEGORIA_SEARCH_EXTENSION)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultArray = JSONArray(result)
+
+            for (index in 0 until resultArray.length()) {
+                var pratoJSON = resultArray[index] as JSONObject
+                var prato = Prato.fromJSON(pratoJSON)
+
+                pratos.add(prato)
+            }
+        }
+
+        return pratos
+    }
+
+    fun SearchPratosByNameCategoria(nameSearch: String, idCategoriaSearch: UUID) : List<Prato>{
+        var pratos = arrayListOf<Prato>()
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + NAME_CATEGORIA_SEARCH_EXTENSION + nameSearch + "/" + idCategoriaSearch)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultArray = JSONArray(result)
+
+            for (index in 0 until resultArray.length()) {
+                var pratoJSON = resultArray[index] as JSONObject
+                var prato = Prato.fromJSON(pratoJSON)
+
                 pratos.add(prato)
             }
         }
