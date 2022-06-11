@@ -2,20 +2,21 @@ package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend
 import com.grupo2.plusorder.backend.Backend.BASE_API
-import com.grupo2.plusorder.backend.models.Categoria
 import com.grupo2.plusorder.backend.models.Cidade
-import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
-object BackendCategoria {
-    private const val BASE_EXTENSION = "Categoria/"
-    private const val CATEGORIA_BY_NAME_EXTENSION = "getCategoriaByName/"
+object BackendCidade {
+    private const val BASE_EXTENSION = "Cidade/"
+    private const val CIDADE_BY_NAME_EXTENSION = "getCidadeByName/"
 
-    fun GetAllCategorias() : List<Categoria> {
-        var categorias = arrayListOf<Categoria>()
+    fun GetAllCidades() : List<Cidade> {
+        var cidades = arrayListOf<Cidade>()
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -27,94 +28,94 @@ object BackendCategoria {
             var resultArray = JSONArray(result)
 
             for (index in 0 until resultArray.length()) {
-                var categoriaJSON = resultArray[index] as JSONObject
-                var categoria = Categoria.fromJSON(categoriaJSON)
-                categorias.add(categoria)
+                var cidadeJSON = resultArray[index] as JSONObject
+                var cidade = Cidade.fromJSON(cidadeJSON)
+                cidades.add(cidade)
             }
         }
 
-        return categorias
+        return cidades
     }
 
-    fun GetCategoria(id: UUID) : Categoria? {
-        var categoria: Categoria? = null
+    fun GetCidade(id: UUID) : Cidade? {
+        var cidade: Cidade? = null
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Backend.BASE_API + BASE_EXTENSION + id)
+            .url(BASE_API + BASE_EXTENSION + id)
             .build()
 
         client.newCall(request).execute().use { response ->
             var result = response.body!!.string()
             var resultJSONObject = JSONObject(result)
-            categoria = Categoria.fromJSON(resultJSONObject)
+            cidade = Cidade.fromJSON(resultJSONObject)
         }
 
-        return categoria
+        return cidade
     }
 
-    fun GetNameCategoriaById(id: UUID) : String? {
-        var categoriaNome: String? = null
+    fun GetCidadeNomeById(id: UUID) : String? {
+        var cidadeNome: String? = null
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Backend.BASE_API + BASE_EXTENSION + id)
+            .url(BASE_API + BASE_EXTENSION + id)
             .build()
 
         client.newCall(request).execute().use { response ->
             var result = response.body!!.string()
             var resultJSONObject = JSONObject(result)
-            categoriaNome = Categoria.fromJSON(resultJSONObject).categoria
+            cidadeNome = Cidade.fromJSON(resultJSONObject).cidade
         }
 
-        return categoriaNome
+        return cidadeNome
     }
 
-    fun GetCategoriaByName(name: String) : Categoria? {
-        var categoria: Categoria? = null
+    fun GetCidadeByName(name: String) : Cidade? {
+        var cidade: Cidade? = null
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + CATEGORIA_BY_NAME_EXTENSION + name)
+            .url(BASE_API + BASE_EXTENSION + CIDADE_BY_NAME_EXTENSION + name)
             .build()
 
         client.newCall(request).execute().use { response ->
             var result = response.body!!.string()
             var resultJSONObject = JSONObject(result)
-            categoria = Categoria.fromJSON(resultJSONObject)
+            cidade = Cidade.fromJSON(resultJSONObject)
         }
 
-        return categoria
+        return cidade
     }
 
-    fun GetCategoriaIdByName(name: String) : UUID? {
-        var categoriaId: UUID? = null
+    fun GetCidadeIdByName(name: String) : UUID? {
+        var cidadeId: UUID? = null
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + CATEGORIA_BY_NAME_EXTENSION + name)
+            .url(BASE_API + BASE_EXTENSION + CIDADE_BY_NAME_EXTENSION + name)
             .build()
 
         client.newCall(request).execute().use { response ->
             var result = response.body!!.string()
             var resultJSONObject = JSONObject(result)
-            categoriaId = Categoria.fromJSON(resultJSONObject).id
+            cidadeId = Cidade.fromJSON(resultJSONObject).id
         }
 
-        return categoriaId
+        return cidadeId
     }
 
     // Adds object to database and returns true if successful
-    fun AddCategoria(categoria: Categoria) : Boolean {
+    fun AddCidade(cidade: Cidade) : Boolean {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body: RequestBody = RequestBody.create(
-            mediaType, categoria.toJSON().toString())
+            mediaType, cidade.toJSON().toString())
 
-        var categoriaAdded = false
+        var cidadeAdded = false
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION)
+            .url(Backend.BASE_API + BASE_EXTENSION)
             .post(body)
             .build()
 
@@ -123,22 +124,22 @@ object BackendCategoria {
             var resultJSONObject = JSONObject(result)
 
             val status = resultJSONObject.getString("status")
-            categoriaAdded = status == "ok"
+            cidadeAdded = status == "ok"
         }
 
-        return categoriaAdded
+        return cidadeAdded
     }
 
-    fun UpdateCategoria(id: UUID, categoria: Categoria) : Boolean {
+    fun UpdateCidade(id: UUID, cidade: Cidade) : Boolean {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body: RequestBody = RequestBody.create(
-            mediaType, categoria.toJSON().toString())
+            mediaType, cidade.toJSON().toString())
 
-        var categoriaUpdated = false
+        var cidadeUpdated = false
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + id)
+            .url(Backend.BASE_API + BASE_EXTENSION + id)
             .put(body)
             .build()
 
@@ -147,14 +148,14 @@ object BackendCategoria {
             var resultJSONObject = JSONObject(result)
 
             val status = resultJSONObject.getString("status")
-            categoriaUpdated = status == "ok"
+            cidadeUpdated = status == "ok"
         }
 
-        return categoriaUpdated
+        return cidadeUpdated
     }
 
-    fun DeleteCategoria(id: UUID) : Boolean {
-        var categoriaDeleted = false
+    fun DeleteCidade(id: UUID) : Boolean {
+        var cidadeDeleted = false
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -167,9 +168,9 @@ object BackendCategoria {
             var resultJSONObject = JSONObject(result)
 
             val status = resultJSONObject.getString("status")
-            categoriaDeleted = status == "ok"
+            cidadeDeleted = status == "ok"
         }
 
-        return categoriaDeleted
+        return cidadeDeleted
     }
 }
