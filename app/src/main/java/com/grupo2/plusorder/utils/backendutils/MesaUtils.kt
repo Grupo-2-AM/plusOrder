@@ -11,7 +11,7 @@ object MesaUtils {
 
         var mesas = BackendMesa.GetAllMesas()
         for (mesa in mesas)
-            if ((Mesa.QR_CODE + mesa.nrMesa) == decodedQrCode)
+            if ((Mesa.QR_CODE_STRING + mesa.nrMesa) == decodedQrCode)
                 mesaFomQrCode = mesa
 
         return mesaFomQrCode

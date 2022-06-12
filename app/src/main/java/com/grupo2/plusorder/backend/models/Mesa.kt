@@ -38,6 +38,6 @@ class Mesa {
             )
         }
 
-        val QR_CODE : String = "plusOrder" // + nrMesa
+        val QR_CODE_STRING : String = "plusOrder" // + nrMesa
     }
 }
