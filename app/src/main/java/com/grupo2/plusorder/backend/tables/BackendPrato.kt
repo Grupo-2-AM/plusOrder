@@ -74,17 +74,35 @@ object BackendPrato {
             .url(BASE_API + BASE_EXTENSION + CATEGORIA_SEARCH_EXTENSION + idCategoriaSearch)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultArray = JSONArray(result)
-
-            for (index in 0 until resultArray.length()) {
-                var pratoJSON = resultArray[index] as JSONObject
-                var prato = Prato.fromJSON(pratoJSON)
-
-                pratos.add(prato)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null) {
+                        var result = response.body!!.string()
+                        var resultArray = JSONArray(result)
+
+                        for (index in 0 until resultArray.length()) {
+                            var pratoJSON = resultArray[index] as JSONObject
+                            var prato = Prato.fromJSON(pratoJSON)
+
+                            pratos.add(prato)
+                        }
+                    }
+
+                    countDownLatch.countDown()
+
+                }
+            }
+        })
 
         return pratos
     }

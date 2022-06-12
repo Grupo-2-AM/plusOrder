@@ -8,7 +8,9 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 object BackendCategoria {
     private const val BASE_EXTENSION = "Categoria/"
@@ -95,11 +97,32 @@ object BackendCategoria {
             .url(BASE_API + BASE_EXTENSION + CATEGORIA_BY_NAME_EXTENSION + name)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            categoriaId = Categoria.fromJSON(resultJSONObject).id
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+
+                        var resultJSONObject = JSONObject(result)
+                        categoriaId = Categoria.fromJSON(resultJSONObject).id
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return categoriaId
     }
