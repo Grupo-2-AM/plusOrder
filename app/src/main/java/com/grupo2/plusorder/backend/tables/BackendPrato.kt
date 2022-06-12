@@ -1,12 +1,15 @@
 package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend.BASE_API
+import com.grupo2.plusorder.backend.models.Conta
 import com.grupo2.plusorder.backend.models.Prato
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 object BackendPrato {
     private const val BASE_EXTENSION = "Prato/"
@@ -21,16 +24,33 @@ object BackendPrato {
             .url(BASE_API + BASE_EXTENSION)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultArray = JSONArray(result)
-
-            for (index in 0 until resultArray.length()) {
-                var pratoJSON = resultArray[index] as JSONObject
-                var prato = Prato.fromJSON(pratoJSON)
-                pratos.add(prato)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    var result = response.body!!.string()
+                    var resultArray = JSONArray(result)
+
+                    for (index in 0 until resultArray.length()) {
+                        var pratoJSON = resultArray[index] as JSONObject
+                        var prato = Prato.fromJSON(pratoJSON)
+                        pratos.add(prato)
+                    }
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pratos
     }
