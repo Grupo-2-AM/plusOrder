@@ -51,7 +51,7 @@ object BackendPrato {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + CATEGORIA_SEARCH_EXTENSION)
+            .url(BASE_API + BASE_EXTENSION + CATEGORIA_SEARCH_EXTENSION + idCategoriaSearch)
             .build()
 
         client.newCall(request).execute().use { response ->
