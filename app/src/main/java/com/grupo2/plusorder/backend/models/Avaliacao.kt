@@ -43,7 +43,5 @@ class Avaliacao {
                 LocalDate.parse(jsonObject["data"] as? String?, DateTimeFormatter.ISO_DATE_TIME)
             )
         }
-
-        val QR_CODE_STRING : String = "plusOrder" // + nrMesa
     }
 }
