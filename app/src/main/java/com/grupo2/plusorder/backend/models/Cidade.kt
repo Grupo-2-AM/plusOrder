@@ -4,6 +4,7 @@ import org.json.JSONObject
 import java.util.*
 
 class Cidade {
+
     // Attributes
     var id: UUID? = null
     var cidade: String? = null

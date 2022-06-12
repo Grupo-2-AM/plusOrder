@@ -115,7 +115,7 @@ object BackendCidade {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Backend.BASE_API + BASE_EXTENSION)
+            .url(BASE_API + BASE_EXTENSION)
             .post(body)
             .build()
 
@@ -139,7 +139,7 @@ object BackendCidade {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Backend.BASE_API + BASE_EXTENSION + id)
+            .url(BASE_API + BASE_EXTENSION + id)
             .put(body)
             .build()
 
@@ -159,7 +159,7 @@ object BackendCidade {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Backend.BASE_API + BASE_EXTENSION + id)
+            .url(BASE_API + BASE_EXTENSION + id)
             .delete()
             .build()
 
