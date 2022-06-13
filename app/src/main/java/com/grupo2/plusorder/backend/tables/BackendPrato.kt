@@ -99,10 +99,12 @@ object BackendPrato {
                     }
 
                     countDownLatch.countDown()
-
                 }
             }
         })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pratos
     }
