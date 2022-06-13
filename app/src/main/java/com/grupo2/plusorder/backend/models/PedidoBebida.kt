@@ -3,17 +3,17 @@ package com.grupo2.plusorder.backend.models
 import org.json.JSONObject
 import java.util.*
 
-class PedidoPrato {
+class PedidoBebida {
 
     // Attributes
-    var idPrato: UUID? = null
+    var idBebida: UUID? = null
     var idPedido: UUID? = null
     var quantidade: Integer? = null
     var precoUnidade: Double? = null
 
     // Constructors
-    constructor(idPrato: UUID?, idPedido: UUID?, quantidade: Integer?, precoUnidade: Double?) {
-        this.idPrato = idPrato
+    constructor(idBebida: UUID?, idPedido: UUID?, quantidade: Integer?, precoUnidade: Double?) {
+        this.idBebida = idBebida
         this.idPedido = idPedido
         this.quantidade = quantidade
         this.precoUnidade = precoUnidade
@@ -22,16 +22,16 @@ class PedidoPrato {
     // Functions
     fun toJSON(): JSONObject {
         return JSONObject()
-            .put("idPrato", idPrato)
+            .put("idBebida", idBebida)
             .put("idPedido", idPedido)
             .put("quantidade", quantidade)
             .put("precoUnidade", precoUnidade);
     }
 
     companion object {
-        fun fromJSON(jsonObject: JSONObject): PedidoPrato {
-            return PedidoPrato(
-                UUID.fromString(jsonObject["idPrato"] as? String),
+        fun fromJSON(jsonObject: JSONObject): PedidoBebida {
+            return PedidoBebida(
+                UUID.fromString(jsonObject["idBebida"] as? String),
                 UUID.fromString(jsonObject["idPedido"] as? String),
                 jsonObject["quantidade"] as? Integer,
                 jsonObject["precoUnidade"] as? Double
