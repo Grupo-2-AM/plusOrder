@@ -10,15 +10,15 @@ class PedidoPrato {
     // Attributes
     var idPrato: UUID? = null
     var idPedido: UUID? = null
-    var quantidade: Double? = null
-    var data: LocalDate? = null
+    var quantidade: Integer? = null
+    var precoUnit: Double? = null
 
     // Constructors
-    constructor(idPrato: UUID?, idPedido: UUID?, quantidade: Double?, data: LocalDate?) {
+    constructor(idPrato: UUID?, idPedido: UUID?, quantidade: Integer?, precoUnit: Double?) {
         this.idPrato = idPrato
         this.idPedido = idPedido
         this.quantidade = quantidade
-        this.data = data
+        this.precoUnit = precoUnit
     }
 
     // Functions
@@ -27,7 +27,7 @@ class PedidoPrato {
             .put("idPrato", idPrato)
             .put("idPedido", idPedido)
             .put("quantidade", quantidade)
-            .put("data", data);
+            .put("precoUnit", precoUnit);
     }
 
     companion object {
@@ -35,8 +35,8 @@ class PedidoPrato {
             return PedidoPrato(
                 UUID.fromString(jsonObject["idPrato"] as? String),
                 UUID.fromString(jsonObject["idPedido"] as? String),
-                jsonObject["quantidade"] as? Double,
-                LocalDate.parse(jsonObject["data"] as? String?, DateTimeFormatter.ISO_DATE_TIME)
+                jsonObject["quantidade"] as? Integer,
+                jsonObject["precoUnit"] as? Double
             )
         }
     }
