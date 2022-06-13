@@ -12,6 +12,7 @@ import java.util.*
 
 object BackendAvaliacao {
     private const val BASE_EXTENSION = "Avaliacao/"
+    private const val AVALICOES_BY_PRATO = "getAvaliacoesByPrato/"
 
     fun GetAllAvaliacoes() : List<Avaliacao> {
         var avaliacoes = arrayListOf<Avaliacao>()
@@ -19,6 +20,28 @@ object BackendAvaliacao {
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(BASE_API + BASE_EXTENSION)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            var result = response.body!!.string()
+            var resultArray = JSONArray(result)
+
+            for (index in 0 until resultArray.length()) {
+                var avaliacaoJSON = resultArray[index] as JSONObject
+                var avaliacao = Avaliacao.fromJSON(avaliacaoJSON)
+                avaliacoes.add(avaliacao)
+            }
+        }
+
+        return avaliacoes
+    }
+
+    fun GetAllAvaliacoesByIdPrato(idPrato: UUID) : List<Avaliacao> {
+        var avaliacoes = arrayListOf<Avaliacao>()
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + AVALICOES_BY_PRATO + idPrato)
             .build()
 
         client.newCall(request).execute().use { response ->
