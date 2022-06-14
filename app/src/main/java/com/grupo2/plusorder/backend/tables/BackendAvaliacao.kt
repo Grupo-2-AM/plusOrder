@@ -2,17 +2,19 @@ package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend.BASE_API
 import com.grupo2.plusorder.backend.models.Avaliacao
+import com.grupo2.plusorder.backend.models.Prato
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 object BackendAvaliacao {
     private const val BASE_EXTENSION = "Avaliacao/"
     private const val AVALICOES_BY_PRATO = "getAvaliacoesByPrato/"
+    private const val MEDIA_BY_PRATO = "getMediaAvaliacaoByPrato/"
 
     fun GetAllAvaliacoes() : List<Avaliacao> {
         var avaliacoes = arrayListOf<Avaliacao>()
@@ -73,6 +75,40 @@ object BackendAvaliacao {
         }
 
         return avaliacao
+    }
+
+    fun GetMediaAvaliacaoByPrato(idPrato: UUID) : Double? {
+        var mediaAval: Double? = null
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + MEDIA_BY_PRATO + idPrato)
+            .build()
+
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    var result = response.body!!.string()
+                    mediaAval = result.toDoubleOrNull()
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
+
+        return mediaAval
     }
 
     // Adds object to database and returns true if successful
