@@ -2,14 +2,15 @@ package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend
 import com.grupo2.plusorder.backend.Backend.BASE_API
+import com.grupo2.plusorder.backend.models.Categoria
 import com.grupo2.plusorder.backend.models.Cidade
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 object BackendCidade {
     private const val BASE_EXTENSION = "Cidade/"
@@ -23,16 +24,36 @@ object BackendCidade {
             .url(BASE_API + BASE_EXTENSION)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultArray = JSONArray(result)
-
-            for (index in 0 until resultArray.length()) {
-                var cidadeJSON = resultArray[index] as JSONObject
-                var cidade = Cidade.fromJSON(cidadeJSON)
-                cidades.add(cidade)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultArray = JSONArray(result)
+
+                        for (index in 0 until resultArray.length()) {
+                            var cidadeJSON = resultArray[index] as JSONObject
+                            var cidade = Cidade.fromJSON(cidadeJSON)
+                            cidades.add(cidade)
+                        }
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return cidades
     }
@@ -45,11 +66,31 @@ object BackendCidade {
             .url(BASE_API + BASE_EXTENSION + id)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            cidade = Cidade.fromJSON(resultJSONObject)
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+                        cidade = Cidade.fromJSON(resultJSONObject)
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return cidade
     }
@@ -62,11 +103,31 @@ object BackendCidade {
             .url(BASE_API + BASE_EXTENSION + id)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            cidadeNome = Cidade.fromJSON(resultJSONObject).cidade
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+                        cidadeNome = Cidade.fromJSON(resultJSONObject).cidade
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return cidadeNome
     }
@@ -79,28 +140,41 @@ object BackendCidade {
             .url(BASE_API + BASE_EXTENSION + CIDADE_BY_NAME_EXTENSION + name)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            cidade = Cidade.fromJSON(resultJSONObject)
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+                        cidade = Cidade.fromJSON(resultJSONObject)
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return cidade
     }
 
     fun GetCidadeIdByName(name: String) : UUID? {
-        var cidadeId: UUID? = null
+        var cidade = GetCidadeByName(name)
+        var cidadeId : UUID? = null
 
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + CIDADE_BY_NAME_EXTENSION + name)
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            cidadeId = Cidade.fromJSON(resultJSONObject).id
-        }
+        if (cidade != null)
+            cidadeId = cidade.id
 
         return cidadeId
     }
@@ -119,13 +193,33 @@ object BackendCidade {
             .post(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            cidadeAdded = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        cidadeAdded = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return cidadeAdded
     }
@@ -143,13 +237,33 @@ object BackendCidade {
             .put(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            cidadeUpdated = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        cidadeUpdated = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return cidadeUpdated
     }
@@ -163,13 +277,33 @@ object BackendCidade {
             .delete()
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            cidadeDeleted = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        cidadeDeleted = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return cidadeDeleted
     }
