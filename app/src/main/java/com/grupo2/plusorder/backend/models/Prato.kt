@@ -13,7 +13,8 @@ class Prato {
     var ativo: Integer? = null
     var idCategoria: UUID? = null
     var imagem: String? = null
-
+    var descricao: String? = null
+    
     // Constructors
     constructor(
         id: UUID?,
@@ -22,7 +23,8 @@ class Prato {
         preco: Double?,
         ativo: Integer?,
         idCategoria: UUID?,
-        imagem: String?
+        imagem: String?,
+        descricao: String?
     ) {
         this.id = id
         this.nome = nome
@@ -31,6 +33,7 @@ class Prato {
         this.ativo = ativo
         this.idCategoria = idCategoria
         this.imagem = imagem
+        this.descricao = descricao
     }
 
     // Functions
@@ -42,7 +45,8 @@ class Prato {
             .put("preco", preco)
             .put("ativo", ativo)
             .put("idCategoria", idCategoria)
-            .put("imagem", imagem);
+            .put("imagem", imagem)
+            .put("descricao", descricao);
     }
 
     companion object {
@@ -54,7 +58,8 @@ class Prato {
                 jsonObject["preco"] as? Double,
                 jsonObject["ativo"] as? Integer,
                 UUID.fromString(jsonObject["idCategoria"] as? String?),
-                jsonObject["imagem"] as? String
+                jsonObject["imagem"] as? String,
+                jsonObject["descricao"] as? String
             )
         }
     }
