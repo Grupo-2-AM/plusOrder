@@ -1,6 +1,7 @@
 package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend.BASE_API
+import com.grupo2.plusorder.backend.models.Categoria
 import com.grupo2.plusorder.backend.models.Conta
 import com.grupo2.plusorder.utils.DateUtils
 import okhttp3.*
@@ -45,11 +46,31 @@ object BackendConta {
             .url(BASE_API + BASE_EXTENSION + id)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            conta = Conta.fromJSON(resultJSONObject)
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null) {
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+                        conta = Conta.fromJSON(resultJSONObject)
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return conta
     }
