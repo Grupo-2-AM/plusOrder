@@ -24,16 +24,36 @@ object BackendConta {
             .url(BASE_API + BASE_EXTENSION)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultArray = JSONArray(result)
-
-            for (index in 0 until resultArray.length()) {
-                var contaJSON = resultArray[index] as JSONObject
-                var conta = Conta.fromJSON(contaJSON)
-                contas.add(conta)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null) {
+                        var result = response.body!!.string()
+                        var resultArray = JSONArray(result)
+
+                        for (index in 0 until resultArray.length()) {
+                            var contaJSON = resultArray[index] as JSONObject
+                            var conta = Conta.fromJSON(contaJSON)
+                            contas.add(conta)
+                        }
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return contas
     }
@@ -89,13 +109,33 @@ object BackendConta {
             .post(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            contaAdded = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null) {
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        contaAdded = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return contaAdded
     }
@@ -113,13 +153,33 @@ object BackendConta {
             .put(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            contaUpdated = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null) {
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        contaUpdated = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return contaUpdated
     }
@@ -133,13 +193,30 @@ object BackendConta {
             .delete()
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            contaDeleted = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null) {
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        contaDeleted = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
 
         return contaDeleted
     }
@@ -187,10 +264,8 @@ object BackendConta {
         return conta
     }
 
-    fun GetAge(conta: Conta) : Int? {
-        // Check if conta.dataNasc filled
-        if (conta.dataNasc != null)
-            return DateUtils.GetAge(conta.dataNasc!!)
-        return null
+    // no null-check
+    fun GetAge(idConta: UUID) : Int {
+        return DateUtils.GetAge(GetConta(idConta)!!.dataNasc!!)
     }
 }
