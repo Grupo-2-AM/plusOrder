@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch
 
 object BackendPedido {
     private const val BASE_EXTENSION = "Pedido/"
+    private const val PEDIDOS_BY_MESA = "pedidosByMesa/"
 
     fun GetAllPedidos() : List<Pedido> {
         var pedidos = arrayListOf<Pedido>()
@@ -54,6 +55,49 @@ object BackendPedido {
 
         return pedidos
     }
+
+    fun GetAllPedidosByMesa(idMesa: UUID) : List<Pedido> {
+        var pedidos = arrayListOf<Pedido>()
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + PEDIDOS_BY_MESA + idMesa)
+            .build()
+
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultArray = JSONArray(result)
+
+                        for (index in 0 until resultArray.length()) {
+                            var pedidoJSON = resultArray[index] as JSONObject
+                            var pedido = Pedido.fromJSON(pedidoJSON)
+                            pedidos.add(pedido)
+                        }
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
+
+        return pedidos
+    }
+
 
     fun GetPedido(id: UUID) : Pedido? {
         var pedido: Pedido? = null
