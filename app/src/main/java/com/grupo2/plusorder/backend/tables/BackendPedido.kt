@@ -56,7 +56,7 @@ object BackendPedido {
         return pedidos
     }
 
-    fun GetAllPedidosByMesa(idMesa: UUID) : List<Pedido> {
+    fun GetPedidosByMesa(idMesa: UUID) : List<Pedido> {
         var pedidos = arrayListOf<Pedido>()
 
         val client = OkHttpClient()
@@ -97,7 +97,6 @@ object BackendPedido {
 
         return pedidos
     }
-
 
     fun GetPedido(id: UUID) : Pedido? {
         var pedido: Pedido? = null

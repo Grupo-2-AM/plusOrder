@@ -16,8 +16,48 @@ object BackendPrato {
     private const val CATEGORIA_SEARCH_EXTENSION = "pratoByCategoria/"
     private const val NAME_CATEGORIA_SEARCH_EXTENSION = "searchPratoWithCategoria/"
     private const val PRATO_BY_PEDIDO = "pratoByPedido/"
+    private const val PRATOS_PAID_TODAY = "getPratosPayedToday/"
 
     fun GetAllPratos() : List<Prato> {
+        var pratos = arrayListOf<Prato>()
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + PRATOS_PAID_TODAY)
+            .build()
+
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    var result = response.body!!.string()
+                    var resultArray = JSONArray(result)
+
+                    for (index in 0 until resultArray.length()) {
+                        var pratoJSON = resultArray[index] as JSONObject
+                        var prato = Prato.fromJSON(pratoJSON)
+                        pratos.add(prato)
+                    }
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
+
+        return pratos
+    }
+
+    fun GetAllPratosPayedToday() : List<Prato> {
         var pratos = arrayListOf<Prato>()
 
         val client = OkHttpClient()
