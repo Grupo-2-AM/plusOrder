@@ -2,13 +2,13 @@ package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend
 import com.grupo2.plusorder.backend.models.Pagamento
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 object BackendPagamento {
     private const val BASE_EXTENSION = "Pagamento/"
@@ -21,16 +21,36 @@ object BackendPagamento {
             .url(Backend.BASE_API + BASE_EXTENSION)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultArray = JSONArray(result)
-
-            for (index in 0 until resultArray.length()) {
-                var pagamentoJSON = resultArray[index] as JSONObject
-                var avaliacao = Pagamento.fromJSON(pagamentoJSON)
-                pagamentos.add(avaliacao)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultArray = JSONArray(result)
+
+                        for (index in 0 until resultArray.length()) {
+                            var pagamentoJSON = resultArray[index] as JSONObject
+                            var avaliacao = Pagamento.fromJSON(pagamentoJSON)
+                            pagamentos.add(avaliacao)
+                        }
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pagamentos
     }
@@ -43,11 +63,31 @@ object BackendPagamento {
             .url(Backend.BASE_API + BASE_EXTENSION + id)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            pagamento = Pagamento.fromJSON(resultJSONObject)
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+                        pagamento = Pagamento.fromJSON(resultJSONObject)
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pagamento
     }
@@ -66,13 +106,33 @@ object BackendPagamento {
             .post(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            pagamentoAdded = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        pagamentoAdded = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pagamentoAdded
     }
@@ -90,13 +150,33 @@ object BackendPagamento {
             .put(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            pagamentoUpdated = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        pagamentoUpdated = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pagamentoUpdated
     }
@@ -110,13 +190,34 @@ object BackendPagamento {
             .delete()
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
 
-            val status = resultJSONObject.getString("status")
-            pagamentoDeleted = status == "ok"
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        pagamentoDeleted = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pagamentoDeleted
     }
