@@ -2,13 +2,13 @@ package com.grupo2.plusorder.backend.tables
 
 import com.grupo2.plusorder.backend.Backend.BASE_API
 import com.grupo2.plusorder.backend.models.PedidoPrato
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.*
+import java.util.concurrent.CountDownLatch
 
 object BackendPedidoPrato {
     private const val BASE_EXTENSION = "PedidoPrato/"
@@ -21,16 +21,36 @@ object BackendPedidoPrato {
             .url(BASE_API + BASE_EXTENSION)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultArray = JSONArray(result)
-
-            for (index in 0 until resultArray.length()) {
-                var pedidoPratosJSON = resultArray[index] as JSONObject
-                var pedidoPrato = PedidoPrato.fromJSON(pedidoPratosJSON)
-                pedidoPratos.add(pedidoPrato)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultArray = JSONArray(result)
+
+                        for (index in 0 until resultArray.length()) {
+                            var pedidoPratosJSON = resultArray[index] as JSONObject
+                            var pedidoPrato = PedidoPrato.fromJSON(pedidoPratosJSON)
+                            pedidoPratos.add(pedidoPrato)
+                        }
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pedidoPratos
     }
@@ -43,11 +63,31 @@ object BackendPedidoPrato {
             .url(BASE_API + BASE_EXTENSION + id)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
-            pedidoPrato = PedidoPrato.fromJSON(resultJSONObject)
-        }
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+                        pedidoPrato = PedidoPrato.fromJSON(resultJSONObject)
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pedidoPrato
     }
@@ -66,13 +106,33 @@ object BackendPedidoPrato {
             .post(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            pedidoPratoAdded = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        pedidoPratoAdded = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pedidoPratoAdded
     }
@@ -90,13 +150,33 @@ object BackendPedidoPrato {
             .put(body)
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            pedidoPratoUpdated = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        pedidoPratoUpdated = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pedidoPratoUpdated
     }
@@ -110,13 +190,33 @@ object BackendPedidoPrato {
             .delete()
             .build()
 
-        client.newCall(request).execute().use { response ->
-            var result = response.body!!.string()
-            var resultJSONObject = JSONObject(result)
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
 
-            val status = resultJSONObject.getString("status")
-            pedidoPratoDeleted = status == "ok"
-        }
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+
+                        val status = resultJSONObject.getString("status")
+                        pedidoPratoDeleted = status == "ok"
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
 
         return pedidoPratoDeleted
     }
