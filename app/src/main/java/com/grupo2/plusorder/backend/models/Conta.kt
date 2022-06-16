@@ -60,6 +60,10 @@ class Conta {
             .put("dataNasc", dataNasc);
     }
 
+    fun isFuncionario(): Boolean {
+        return eFuncionario == Integer(1)
+    }
+
     companion object {
         fun fromJSON(jsonObject: JSONObject): Conta {
             return Conta(
