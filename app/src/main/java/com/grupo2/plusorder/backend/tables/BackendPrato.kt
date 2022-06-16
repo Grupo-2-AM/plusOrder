@@ -23,7 +23,7 @@ object BackendPrato {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION + PRATOS_PAID_TODAY)
+            .url(BASE_API + BASE_EXTENSION)
             .build()
 
         var countDownLatch = CountDownLatch(1)
