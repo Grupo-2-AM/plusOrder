@@ -18,6 +18,7 @@ object BackendPrato {
     private const val PRATO_BY_PEDIDO = "pratoByPedido/"
     private const val PRATOS_PAID_TODAY = "getPratosPayedToday/"
     private const val PRATO_BY_NOME = "pratoByName/"
+    private const val FAVORITOS_BY_IDCLIENTE = "favoritosByIdCliente/"
 
     fun GetAllPratos() : List<Prato> {
         var pratos = arrayListOf<Prato>()
@@ -25,6 +26,45 @@ object BackendPrato {
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(BASE_API + BASE_EXTENSION)
+            .build()
+
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    var result = response.body!!.string()
+                    var resultArray = JSONArray(result)
+
+                    for (index in 0 until resultArray.length()) {
+                        var pratoJSON = resultArray[index] as JSONObject
+                        var prato = Prato.fromJSON(pratoJSON)
+                        pratos.add(prato)
+                    }
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
+
+        return pratos
+    }
+
+    fun GetAllFavoritosByIdCliente(idCliente: UUID) : List<Prato> {
+        var pratos = arrayListOf<Prato>()
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + FAVORITOS_BY_IDCLIENTE + idCliente)
             .build()
 
         var countDownLatch = CountDownLatch(1)
@@ -102,7 +142,7 @@ object BackendPrato {
         var activePratos = arrayListOf<Prato>()
 
         for (prato in pratosSearch)
-            if (prato.ativo!!.toInt() == 1) // toInt necessary because prato.ativo is Integer
+            if (prato.ativo!!.toInt() == 1) // toInt necessary because prato.ativo is Integer(Int != Integer)
                 activePratos.add(prato)
 
         return activePratos
