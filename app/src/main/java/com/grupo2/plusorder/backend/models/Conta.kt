@@ -17,8 +17,14 @@ class Conta {
     var email: String? = null
     var NIF: String? = null
     var dataNasc: LocalDate? = null
+    var imagem: String? = null
 
     // Constructors
+    constructor(email: String?, pass: String?) {
+        this.pass = pass
+        this.email = email
+    }
+
     constructor(
         id: UUID?,
         nome_pp: String?,
@@ -28,7 +34,8 @@ class Conta {
         idCidade: UUID?,
         email: String?,
         NIF: String?,
-        dataNasc: LocalDate?
+        dataNasc: LocalDate?,
+        imagem: String?
     ) {
         this.id = id
         this.nome_pp = nome_pp
@@ -39,11 +46,7 @@ class Conta {
         this.email = email
         this.NIF = NIF
         this.dataNasc = dataNasc
-    }
-
-    constructor(email: String?, pass: String?) {
-        this.pass = pass
-        this.email = email
+        this.imagem = imagem
     }
 
     // Functions
@@ -57,7 +60,8 @@ class Conta {
             .put("idCidade", idCidade)
             .put("email", email)
             .put("nif", NIF)
-            .put("dataNasc", dataNasc);
+            .put("dataNasc", dataNasc)
+            .put("imagem", imagem);
     }
 
     fun isFuncionario(): Boolean {
@@ -75,7 +79,8 @@ class Conta {
                 UUID.fromString(jsonObject["idCidade"] as? String?),
                 jsonObject["email"] as? String,
                 jsonObject["nif"] as? String?,
-                LocalDate.parse(jsonObject["dataNasc"] as? String?, DateTimeFormatter.ISO_DATE_TIME)
+                LocalDate.parse(jsonObject["dataNasc"] as? String?, DateTimeFormatter.ISO_DATE_TIME),
+                jsonObject["imagem"] as? String
             )
         }
     }
