@@ -17,6 +17,7 @@ object BackendPrato {
     private const val NAME_CATEGORIA_SEARCH_EXTENSION = "searchPratoWithCategoria/"
     private const val PRATO_BY_PEDIDO = "pratoByPedido/"
     private const val PRATOS_PAID_TODAY = "getPratosPayedToday/"
+    private const val PRATO_BY_NOME = "pratoByName/"
 
     fun GetAllPratos() : List<Prato> {
         var pratos = arrayListOf<Prato>()
@@ -62,7 +63,7 @@ object BackendPrato {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(BASE_API + BASE_EXTENSION)
+            .url(BASE_API + BASE_EXTENSION + PRATOS_PAID_TODAY)
             .build()
 
         var countDownLatch = CountDownLatch(1)
@@ -242,6 +243,43 @@ object BackendPrato {
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(BASE_API + BASE_EXTENSION + id)
+            .build()
+
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null) {
+                        var result = response.body!!.string()
+                        var resultJSONObject = JSONObject(result)
+                        prato = Prato.fromJSON(resultJSONObject)
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
+
+        return prato
+    }
+
+    fun GetPratoByName(nome: String) : Prato? {
+        var prato: Prato? = null
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + PRATO_BY_NOME + nome)
             .build()
 
         var countDownLatch = CountDownLatch(1)
