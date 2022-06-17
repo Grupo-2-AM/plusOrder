@@ -70,18 +70,33 @@ class Conta {
 
     companion object {
         fun fromJSON(jsonObject: JSONObject): Conta {
-            return Conta(
-                UUID.fromString(jsonObject["id"] as? String),
-                jsonObject["nome_pp"] as? String,
-                jsonObject["eFuncionario"] as? Integer,
-                jsonObject["pass"] as? String,
-                jsonObject["ativo"] as? Integer,
-                UUID.fromString(jsonObject["idCidade"] as? String?),
-                jsonObject["email"] as? String,
-                jsonObject["nif"] as? String?,
-                LocalDate.parse(jsonObject["dataNasc"] as? String?, DateTimeFormatter.ISO_DATE_TIME),
-                jsonObject["imagem"] as? String
-            )
+            // Handle null date
+            if (jsonObject["dataNasc"] as? String? == null)
+                return Conta(
+                    UUID.fromString(jsonObject["id"] as? String),
+                    jsonObject["nome_pp"] as? String,
+                    jsonObject["eFuncionario"] as? Integer,
+                    jsonObject["pass"] as? String,
+                    jsonObject["ativo"] as? Integer,
+                    UUID.fromString(jsonObject["idCidade"] as? String?),
+                    jsonObject["email"] as? String,
+                    jsonObject["nif"] as? String?,
+                    LocalDate.now(),
+                    jsonObject["imagem"] as? String
+                )
+            else
+                return Conta(
+                    UUID.fromString(jsonObject["id"] as? String),
+                    jsonObject["nome_pp"] as? String,
+                    jsonObject["eFuncionario"] as? Integer,
+                    jsonObject["pass"] as? String,
+                    jsonObject["ativo"] as? Integer,
+                    UUID.fromString(jsonObject["idCidade"] as? String?),
+                    jsonObject["email"] as? String,
+                    jsonObject["nif"] as? String?,
+                    LocalDate.parse(jsonObject["dataNasc"] as? String?, DateTimeFormatter.ISO_DATE_TIME),
+                    jsonObject["imagem"] as? String
+                )
         }
     }
 }

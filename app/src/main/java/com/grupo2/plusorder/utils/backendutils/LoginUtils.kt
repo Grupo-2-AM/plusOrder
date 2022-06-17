@@ -9,36 +9,59 @@ import java.util.*
 object LoginUtils {
 
     // Attempt to login and return an Account if successful
-    fun TryLogin(textEmail: String, textPassword : String) : Conta?{
+    fun TryLogin(textEmail: String, textPassword: String): Conta? {
         var contaLogin = Conta(textEmail, textPassword)
         return BackendConta.LoginConta(contaLogin)
     }
 
     // Attempt to register and return the id if successful
-    fun TryRegister(textNome: String, textEmail: String, textPassword: String) : UUID? {
-        var contaRegister = Conta(UUID.randomUUID(), textNome, Integer(0), textPassword, Integer(1), Constants.EMPTY_GUID, textEmail, null, null)
+    fun TryRegister(textNome: String, textEmail: String, textPassword: String): UUID? {
+        var contaRegister = Conta(
+            UUID.randomUUID(),
+            textNome,
+            Integer(0),
+            textPassword,
+            Integer(1),
+            Constants.DEFAULT_CIDADE,
+            textEmail,
+            null,
+            null,
+            Constants.DEFAULT_IMAGEM
+        )
 
         // Attempt register
         var contaAttempt = BackendConta.AddConta(contaRegister)
 
         // if Added
-        return if (contaAttempt)
-            contaRegister.id
-        else
-            null
+        return contaAttempt
     }
 
     // Attempt to register and return the id if successful
-    fun TryRegisterExtraInfo(textNome: String, textEmail: String, textPassword: String, idCidade: UUID, NIF: String, dataNasc: LocalDate) : UUID? {
-        var contaRegister = Conta(UUID.randomUUID(), textNome, Integer(0), textPassword, Integer(1), idCidade, textEmail, NIF, dataNasc)
+    fun TryRegisterExtraInfo(
+        textNome: String,
+        textEmail: String,
+        textPassword: String,
+        idCidade: UUID,
+        NIF: String,
+        dataNasc: LocalDate
+    ): UUID? {
+        var contaRegister = Conta(
+            UUID.randomUUID(),
+            textNome,
+            Integer(0),
+            textPassword,
+            Integer(1),
+            idCidade,
+            textEmail,
+            NIF,
+            dataNasc,
+            null
+        )
 
         // Attempt register
         var contaAttempt = BackendConta.AddConta(contaRegister)
 
         // if Added
-        return if (contaAttempt)
-            contaRegister.id
-        else
-            null
+        return contaAttempt
     }
 }

@@ -95,13 +95,13 @@ object BackendConta {
         return conta
     }
 
-    // Adds object to database and returns true if successful
-    fun AddConta(conta: Conta) : Boolean {
+    // Adds object to database and returns uuid if successful
+    fun AddConta(conta: Conta) : UUID? {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body: RequestBody = RequestBody.create(
             mediaType, conta.toJSON().toString())
 
-        var contaAdded = false
+        var contaUUID: UUID? = null
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -124,9 +124,7 @@ object BackendConta {
                     if (response.body != null) {
                         var result = response.body!!.string()
                         var resultJSONObject = JSONObject(result)
-
-                        val status = resultJSONObject.getString("status")
-                        contaAdded = status == "ok"
+                        contaUUID = Conta.fromJSON(resultJSONObject).id
                     }
 
                     countDownLatch.countDown()
@@ -137,7 +135,7 @@ object BackendConta {
         // await until request finished
         countDownLatch.await()
 
-        return contaAdded
+        return contaUUID
     }
 
     fun UpdateConta(id: UUID, conta: Conta) : Boolean {
