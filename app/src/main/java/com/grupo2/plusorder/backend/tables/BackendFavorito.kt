@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch
 
 object BackendFavorito {
     private const val BASE_EXTENSION = "Favorito/"
+    private const val FAVORITO_BY_ID_CLIENTE_ID_PRATO = "getFavoritoByIdClienteAndIdPrato/"
 
     fun GetAllFavoritos() : List<Favorito> {
         var favoritos = arrayListOf<Favorito>()
@@ -91,6 +92,46 @@ object BackendFavorito {
 
         return favorito
     }
+
+    fun GetFavoritoByIdClienteAndIdPrato(idCliente: UUID, idPrato: UUID) : Favorito? {
+        var favorito: Favorito? = null
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(BASE_API + BASE_EXTENSION + FAVORITO_BY_ID_CLIENTE_ID_PRATO + idCliente + "/" + idPrato)
+            .build()
+
+        var countDownLatch = CountDownLatch(1)
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                countDownLatch.countDown()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful)
+                        throw IOException("Unexpected code $response")
+
+                    if (response.body != null){
+                        var result = response.body!!.string()
+                        if (result != "") {
+                            var resultJSONObject = JSONObject(result)
+                            favorito = Favorito.fromJSON(resultJSONObject)
+                        }
+                    }
+
+                    countDownLatch.countDown()
+                }
+            }
+        })
+
+        // await until request finished
+        countDownLatch.await()
+
+        return favorito
+    }
+
 
     // Adds object to database and returns true if successful
     fun AddFavorito(favorito: Favorito) : Boolean {
