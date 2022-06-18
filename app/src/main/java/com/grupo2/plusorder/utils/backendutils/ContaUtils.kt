@@ -10,7 +10,7 @@ import java.util.*
 object ContaUtils {
 
     // Attempt to update account
-    fun TryUpdate(idConta: UUID, textNome: String, textPassword: String, textEmail: String, textNif: String?, dataNasc: LocalDate?, idCidade: UUID?): Boolean? {
+    fun TryUpdate(idConta: UUID, textNome: String, textPassword: String, textEmail: String, textNif: String?, dataNasc: LocalDate?, idCidade: UUID?, imagem: String?): Boolean? {
 
         var contaUpdate = Conta(
             UUID.randomUUID(),
@@ -22,7 +22,7 @@ object ContaUtils {
             textEmail,
             textNif,
             dataNasc,
-            Constants.DEFAULT_IMAGEM
+            imagem
         )
 
         // Attempt update
